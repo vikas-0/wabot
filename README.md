@@ -63,7 +63,7 @@ You can use this as a library in your own Ruby code. Build and install the gem l
 ```
 cd whatsapp_bot_ruby
 gem build whatsapp_bot_ruby.gemspec
-gem install ./whatsapp_bot-0.1.0.gem
+gem install ./whatsapp_web_personal-0.1.0.gem
 ```
 
 Then, in your Ruby app:
@@ -79,6 +79,25 @@ WhatsAppBot.session(username: "alice", headless: true) do |bot|
   bot.send_message(phone_number: "+14155552671", message: "Hello from the gem")
   bot.send_message(phone_number: "+14155552672", message: "Second message")
 end
+```
+
+Using with Bundler (Gemfile):
+
+```
+gem "whatsapp_web_personal", "~> 0.1.0"
+```
+
+Then in code:
+
+```ruby
+require "whatsapp_bot"
+```
+
+CLI when installed via gem:
+
+```
+wawp login -u alice
+wawp send -t "+1234567890" -m "Hello" --headless
 ```
 
 Notes:
