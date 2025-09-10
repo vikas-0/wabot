@@ -58,6 +58,8 @@ module WaBot
       encoded_text = URI.encode_www_form_component(message)
       chat_url = "#{BASE_URL}/send?phone=#{digits_phone}&text=#{encoded_text}"
       @driver.navigate.to(chat_url)
+      # Some dialogs (e.g., notifications prompts) can appear after navigation; try to close them.
+      dismiss_overlays
 
       wait = Selenium::WebDriver::Wait.new(timeout: 60)
       begin
@@ -67,7 +69,14 @@ module WaBot
         # Always attempt to type the message explicitly to avoid relying on URL prefill
         box = find_message_box
         if box
-          box.click
+          begin
+            # Focus composer via JS to avoid click interception
+            @driver.execute_script("arguments[0].focus();", box)
+          rescue Selenium::WebDriver::Error::ElementClickInterceptedError
+            # If some overlay intercepted, try dismissing and continue
+            dismiss_overlays
+            @driver.execute_script("arguments[0].focus();", box)
+          end
           sleep 0.15
           # Select-all + delete to clear any previous text
           modifier = (RUBY_PLATFORM =~ /darwin/i ? :command : :control)
@@ -83,7 +92,13 @@ module WaBot
           begin
             @driver.execute_script("arguments[0].click();", btn)
           rescue
-            btn.click
+            begin
+              btn.click
+            rescue Selenium::WebDriver::Error::ElementClickInterceptedError
+              # Dismiss overlays and retry JS click once
+              dismiss_overlays
+              @driver.execute_script("arguments[0].click();", btn)
+            end
           end
         else
           # If no button, try Enter/Return inside the composer
@@ -208,6 +223,51 @@ module WaBot
       rescue
         false
       end
+    end
+
+    def overlay_present?
+      begin
+        @driver.find_elements(css: "div[role='dialog']").any? { |el| el.displayed? }
+      rescue
+        false
+      end
+    end
+
+    def dismiss_overlays
+      # Best-effort: press ESC, click common dismiss buttons, and wait briefly
+      begin
+        # Press ESC up to 2 times
+        body = @driver.find_element(tag_name: "body")
+        2.times { body.send_keys(:escape) }
+      rescue
+      end
+      # Try common close buttons
+      buttons_css = [
+        "div[role='dialog'] button[aria-label='Close']",
+        "div[role='dialog'] button[aria-label='close']",
+        "div[role='dialog'] button[title='Close']"
+      ]
+      buttons_css.each do |css|
+        @driver.find_elements(css: css).each do |btn|
+          begin
+            @driver.execute_script("arguments[0].click();", btn)
+          rescue
+          end
+        end
+      end
+      # Try common text buttons
+      texts = ["Not now", "No thanks", "Cancel", "Close", "Got it", "OK"]
+      texts.each do |txt|
+        begin
+          el = @driver.find_element(xpath: "//div[@role='dialog']//button[normalize-space(text())='#{txt}']")
+          @driver.execute_script("arguments[0].click();", el)
+        rescue
+        end
+      end
+      # Small wait to allow overlay to disappear
+      Selenium::WebDriver::Wait.new(timeout: 3).until { !overlay_present? }
+    rescue
+      # ignore
     end
   end
 end
