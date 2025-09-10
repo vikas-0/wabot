@@ -11,11 +11,10 @@ module WaBot
   class CLI < Thor
     desc "register", "Register a new local user"
     method_option :username, aliases: "-u", type: :string, required: true, desc: "Username"
-    method_option :password, aliases: "-p", type: :string, required: true, desc: "Password"
     def register
       store = UserStore.new
       begin
-        store.register(options[:username], options[:password])
+        store.register(options[:username])
         puts "User registered: #{options[:username]}".green
       rescue => e
         puts "Error: #{e.message}".red
@@ -25,11 +24,10 @@ module WaBot
 
     desc "login", "Login as a local user"
     method_option :username, aliases: "-u", type: :string, required: true
-    method_option :password, aliases: "-p", type: :string, required: true
     def login
       store = UserStore.new
-      unless store.authenticate(options[:username], options[:password])
-        puts "Invalid username or password".red
+      unless store.authenticate(options[:username])
+        puts "User not found. Please register first.".red
         exit 1
       end
       session = SessionStore.new

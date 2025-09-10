@@ -4,5 +4,4 @@ source "https://rubygems.org"
 
 gem "selenium-webdriver", "~> 4.11"
 gem "thor", "~> 1.3"
-gem "bcrypt", "~> 3.1"
 gem "colorize", "~> 1.1"

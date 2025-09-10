@@ -47,7 +47,7 @@ Notes:
  - Selenium Manager will handle downloading a compatible chromedriver automatically
 
 ## Security
-- Local user passwords are hashed with bcrypt and stored in `storage/users.json`
+- Local users are username-only (no passwords) and stored in `storage/users.json`
 - The current CLI login session is stored in `storage/session.json`
 - Your WhatsApp Web cookies/tokens live inside `profiles/<username>`; keep this folder private
 

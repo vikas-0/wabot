@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = "WaBot: Personal WhatsApp Web automation with CLI and block-based API"
   spec.description   = "Automate WhatsApp Web from Ruby using Selenium. Provides a CLI and a Ruby API with block-based session handling."
-  spec.homepage      = "https://github.com/vikas-0/whatsapp_bot_ruby"
+  spec.homepage      = "https://github.com/vikas-0/wabot"
   spec.license       = "MIT"
 
   spec.required_ruby_version = ">= 3.0"
@@ -22,6 +22,5 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "selenium-webdriver", "~> 4.11"
   spec.add_runtime_dependency "thor", "~> 1.3"
-  spec.add_runtime_dependency "bcrypt", "~> 3.1"
   spec.add_runtime_dependency "colorize", "~> 1.1"
 end

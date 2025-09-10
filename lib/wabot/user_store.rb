@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "json"
-require "bcrypt"
 require "fileutils"
 
 module WaBot
@@ -13,29 +12,20 @@ module WaBot
       initialize_file
     end
 
-    def register(username, password)
+    def register(username)
       raise "Username is required" if username.to_s.strip.empty?
-      raise "Password is required" if password.to_s.strip.empty?
 
       users = read_users
       raise "User already exists" if users.any? { |u| u["username"] == username }
 
-      password_hash = BCrypt::Password.create(password)
-      users << { "username" => username, "password_hash" => password_hash }
+      users << { "username" => username }
       write_users(users)
       true
     end
 
-    def authenticate(username, password)
+    def authenticate(username)
       users = read_users
-      user = users.find { |u| u["username"] == username }
-      return false unless user
-
-      begin
-        BCrypt::Password.new(user["password_hash"]) == password
-      rescue
-        false
-      end
+      users.any? { |u| u["username"] == username }
     end
 
     def users
