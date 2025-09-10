@@ -58,7 +58,8 @@ module WhatsAppBot
         exit 1
       end
 
-      bot = Bot.new(username: session.current_user, headless: options[:headless])
+      legacy_base_dir = File.expand_path("../../..", __dir__)
+      bot = Bot.new(username: session.current_user, headless: options[:headless], base_dir: legacy_base_dir)
       begin
         bot.start
         puts "A Chrome window has opened. Scan the QR code with your phone to login to WhatsApp Web.".cyan
@@ -85,7 +86,8 @@ module WhatsAppBot
         exit 1
       end
 
-      bot = Bot.new(username: session.current_user, headless: options[:headless])
+      legacy_base_dir = File.expand_path("../../..", __dir__)
+      bot = Bot.new(username: session.current_user, headless: options[:headless], base_dir: legacy_base_dir)
       begin
         bot.start
         unless bot.ensure_logged_in(timeout: 180)

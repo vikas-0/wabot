@@ -55,3 +55,32 @@ Notes:
 - If WhatsApp Web UI changes and selectors break, update selectors in `lib/whatsapp_bot/bot.rb`
 - If Chrome fails to start in headless on macOS, try without `--headless` (default)
 - Clear a user's WhatsApp session by deleting `profiles/<username>` (you'll need to scan QR again)
+
+## Gem usage (Ruby API)
+
+You can use this as a library in your own Ruby code. Build and install the gem locally:
+
+```
+cd whatsapp_bot_ruby
+gem build whatsapp_bot_ruby.gemspec
+gem install ./whatsapp_bot-0.1.0.gem
+```
+
+Then, in your Ruby app:
+
+```ruby
+require "whatsapp_bot"
+
+# First-time only: open a visible window and log in (scan QR)
+WhatsAppBot.login(username: "alice", headless: false)
+
+# Later: open a session and send multiple messages inside a block
+WhatsAppBot.session(username: "alice", headless: true) do |bot|
+  bot.send_message(phone_number: "+14155552671", message: "Hello from the gem")
+  bot.send_message(phone_number: "+14155552672", message: "Second message")
+end
+```
+
+Notes:
+- Library defaults to storing Chrome profiles under `~/.whatsapp_bot/profiles/<username>` so your session persists across uses.
+- If you prefer a visible browser for debugging, set `headless: false` in `WhatsAppBot.session(...)`.

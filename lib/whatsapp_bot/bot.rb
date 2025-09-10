@@ -8,7 +8,7 @@ module WhatsAppBot
   class Bot
     BASE_URL = "https://web.whatsapp.com"
 
-    def initialize(username:, base_dir: File.expand_path("../../..", __dir__), headless: false)
+    def initialize(username:, base_dir: File.expand_path("~/.whatsapp_bot"), headless: false)
       @username = username
       @base_dir = base_dir
       @profiles_dir = File.join(@base_dir, "profiles")
@@ -132,6 +132,11 @@ module WhatsAppBot
         warn "Failed to send message: #{e.message}"
         false
       end
+    end
+
+    # Convenience alias
+    def send_to(phone_number, text)
+      send_message(phone_number: phone_number, message: text)
     end
 
     def close
