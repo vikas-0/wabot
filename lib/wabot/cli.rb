@@ -5,8 +5,9 @@ require "colorize"
 require_relative "version"
 require_relative "user_store"
 require_relative "session_store"
+require_relative "bot"
 
-module WhatsAppBot
+module WaBot
   class CLI < Thor
     desc "register", "Register a new local user"
     method_option :username, aliases: "-u", type: :string, required: true, desc: "Username"
@@ -51,15 +52,13 @@ module WhatsAppBot
     desc "wa_login", "Open WhatsApp Web to log in (QR) for the current user"
     method_option :headless, type: :boolean, default: false, desc: "Run Chrome in headless mode"
     def wa_login
-      require_relative "bot"
       session = SessionStore.new
       unless session.logged_in?
         puts "Please login as a local user first (cli login)".red
         exit 1
       end
 
-      legacy_base_dir = File.expand_path("../../..", __dir__)
-      bot = Bot.new(username: session.current_user, headless: options[:headless], base_dir: legacy_base_dir)
+      bot = Bot.new(username: session.current_user, headless: options[:headless])
       begin
         bot.start
         puts "A Chrome window has opened. Scan the QR code with your phone to login to WhatsApp Web.".cyan
@@ -79,15 +78,13 @@ module WhatsAppBot
     method_option :headless, type: :boolean, default: false
     method_option :keep_open, type: :boolean, default: false, desc: "Keep the browser open after sending (debug)"
     def send
-      require_relative "bot"
       session = SessionStore.new
       unless session.logged_in?
         puts "Please login as a local user first (cli login)".red
         exit 1
       end
 
-      legacy_base_dir = File.expand_path("../../..", __dir__)
-      bot = Bot.new(username: session.current_user, headless: options[:headless], base_dir: legacy_base_dir)
+      bot = Bot.new(username: session.current_user, headless: options[:headless])
       begin
         bot.start
         unless bot.ensure_logged_in(timeout: 180)
@@ -111,7 +108,7 @@ module WhatsAppBot
 
     desc "version", "Print version"
     def version
-      puts WhatsAppBot::VERSION
+      puts WaBot::VERSION
     end
   end
 end

@@ -4,11 +4,11 @@ require "selenium-webdriver"
 require "fileutils"
 require "uri"
 
-module WhatsAppBot
+module WaBot
   class Bot
     BASE_URL = "https://web.whatsapp.com"
 
-    def initialize(username:, base_dir: File.expand_path("~/.whatsapp_bot"), headless: false)
+    def initialize(username:, base_dir: File.expand_path("~/.wabot"), headless: false)
       @username = username
       @base_dir = base_dir
       @profiles_dir = File.join(@base_dir, "profiles")
@@ -156,6 +156,7 @@ module WhatsAppBot
         "div[data-testid='conversation-compose-box-input']",
         "div[contenteditable='true'][data-tab='10']",
         "div[contenteditable='true'][data-tab='6']",
+        "div[role='textbox'][contenteditable='true']",
         "div[aria-label='Type a message']",
         "div[title='Type a message']"
       ]

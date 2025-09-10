@@ -4,9 +4,9 @@ require "json"
 require "fileutils"
 require "time"
 
-module WhatsAppBot
+module WaBot
   class SessionStore
-    def initialize(base_dir: File.expand_path("../../..", __dir__))
+    def initialize(base_dir: File.expand_path("~/.wabot"))
       @storage_dir = File.join(base_dir, "storage")
       FileUtils.mkdir_p(@storage_dir)
       @session_file = File.join(@storage_dir, "session.json")

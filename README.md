@@ -1,6 +1,6 @@
-# WhatsApp Bot (Ruby)
+# WaBot (Ruby)
 
-A simple personal WhatsApp bot using Ruby, Selenium, and WhatsApp Web. No WhatsApp Business API required.
+A simple personal WhatsApp Web bot using Ruby, Selenium, and WhatsApp Web. No WhatsApp Business API required.
 
 Features:
 - Register/login local users (credentials stored locally, password hashed with bcrypt)
@@ -13,7 +13,7 @@ Features:
 
 ## Setup
 ```
-cd whatsapp_bot_ruby
+cd wabot
 bundle install
 ```
 
@@ -22,23 +22,23 @@ Note: This project uses Selenium Manager (built into selenium-webdriver >= 4.11)
 ## Usage
 1) Register a local user:
 ```
-ruby bin/whatsapp_bot register -u alice -p secret123
+ruby bin/wabot register -u alice -p secret123
 ```
 
 2) Login as that local user:
 ```
-ruby bin/whatsapp_bot login -u alice -p secret123
+ruby bin/wabot login -u alice -p secret123
 ```
 
 3) Log in to WhatsApp Web (scan QR once). A Chrome window will open:
 ```
-ruby bin/whatsapp_bot wa_login
+ruby bin/wabot wa_login
 ```
 Wait until you see your chat list.
 
 4) Send a message (reuses the saved WhatsApp Web session for the current user):
 ```
-ruby bin/whatsapp_bot send -t "+1234567890" -m "Hello from Ruby bot!"
+ruby bin/wabot send -t "+1234567890" -m "Hello from WaBot!"
 ```
 
 Notes:
@@ -52,7 +52,7 @@ Notes:
 - Your WhatsApp Web cookies/tokens live inside `profiles/<username>`; keep this folder private
 
 ## Troubleshooting
-- If WhatsApp Web UI changes and selectors break, update selectors in `lib/whatsapp_bot/bot.rb`
+- If WhatsApp Web UI changes and selectors break, update selectors in `lib/wabot/bot.rb`
 - If Chrome fails to start in headless on macOS, try without `--headless` (default)
 - Clear a user's WhatsApp session by deleting `profiles/<username>` (you'll need to scan QR again)
 
@@ -61,22 +61,22 @@ Notes:
 You can use this as a library in your own Ruby code. Build and install the gem locally:
 
 ```
-cd whatsapp_bot_ruby
-gem build whatsapp_bot_ruby.gemspec
-gem install ./whatsapp_web_personal-0.1.0.gem
+cd wabot
+gem build wabot.gemspec
+gem install ./wabot-0.1.0.gem
 ```
 
 Then, in your Ruby app:
 
 ```ruby
-require "whatsapp_bot"
+require "wabot"
 
 # First-time only: open a visible window and log in (scan QR)
-WhatsAppBot.login(username: "alice", headless: false)
+WaBot.login(username: "alice", headless: false)
 
 # Later: open a session and send multiple messages inside a block
-WhatsAppBot.session(username: "alice", headless: true) do |bot|
-  bot.send_message(phone_number: "+14155552671", message: "Hello from the gem")
+WaBot.session(username: "alice", headless: true) do |bot|
+  bot.send_message(phone_number: "+14155552671", message: "Hello from WaBot")
   bot.send_message(phone_number: "+14155552672", message: "Second message")
 end
 ```
@@ -84,22 +84,22 @@ end
 Using with Bundler (Gemfile):
 
 ```
-gem "whatsapp_web_personal", "~> 0.1.0"
+gem "wabot", "~> 0.1.0"
 ```
 
 Then in code:
 
 ```ruby
-require "whatsapp_bot"
+require "wabot"
 ```
 
 CLI when installed via gem:
 
 ```
-wawp login -u alice
-wawp send -t "+1234567890" -m "Hello" --headless
+wabot login -u alice
+wabot send -t "+1234567890" -m "Hello from WaBot" --headless
 ```
 
 Notes:
-- Library defaults to storing Chrome profiles under `~/.whatsapp_bot/profiles/<username>` so your session persists across uses.
-- If you prefer a visible browser for debugging, set `headless: false` in `WhatsAppBot.session(...)`.
+- Library defaults to storing Chrome profiles under `~/.wabot/profiles/<username>` so your session persists across uses.
+- If you prefer a visible browser for debugging, set `headless: false` in `WaBot.session(...)`.
