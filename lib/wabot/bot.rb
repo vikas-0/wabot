@@ -156,7 +156,6 @@ module WaBot
         "div[data-testid='conversation-compose-box-input']",
         "div[contenteditable='true'][data-tab='10']",
         "div[contenteditable='true'][data-tab='6']",
-        "div[role='textbox'][contenteditable='true']",
         "div[aria-label='Type a message']",
         "div[title='Type a message']"
       ]

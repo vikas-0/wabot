@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require "wabot/cli"
+require_relative "../lib/wabot/cli"
 
 WaBot::CLI.start(ARGV)

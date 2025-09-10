@@ -61,7 +61,6 @@ Notes:
 You can use this as a library in your own Ruby code. Build and install the gem locally:
 
 ```
-cd wabot
 gem build wabot.gemspec
 gem install ./wabot-0.1.0.gem
 ```
