@@ -3,7 +3,7 @@
 A simple personal WhatsApp Web bot using Ruby, Selenium, and WhatsApp Web. No WhatsApp Business API required.
 
 Features:
-- Register/login local users (credentials stored locally, password hashed with bcrypt)
+- Register/login local users (username-only, stored locally)
 - Persist WhatsApp Web session per user via Chrome profile directory
 - CLI to login to WhatsApp Web (QR) and send messages
 
@@ -22,12 +22,12 @@ Note: This project uses Selenium Manager (built into selenium-webdriver >= 4.11)
 ## Usage
 1) Register a local user:
 ```
-ruby bin/wabot register -u alice -p secret123
+ruby bin/wabot register -u alice
 ```
 
 2) Login as that local user:
 ```
-ruby bin/wabot login -u alice -p secret123
+ruby bin/wabot login -u alice
 ```
 
 3) Log in to WhatsApp Web (scan QR once). A Chrome window will open:
@@ -43,7 +43,7 @@ ruby bin/wabot send -t "+1234567890" -m "Hello from WaBot!"
 
 Notes:
 - Phone number must be in international format including country code, e.g., +14155552671
-- Each local user gets a separate Chrome profile under `profiles/<username>` to persist WhatsApp login
+- Each local user gets a separate Chrome profile under `~/.wabot/profiles/<username>` to persist WhatsApp login
  - Selenium Manager will handle downloading a compatible chromedriver automatically
 
 ## Security
@@ -53,7 +53,7 @@ Notes:
 
 ## Troubleshooting
 - If WhatsApp Web UI changes and selectors break, update selectors in `lib/wabot/bot.rb`
-- If Chrome fails to start in headless on macOS, try without `--headless` (default)
+- If Chrome fails to start in headless on macOS, try with `--headless=false` to open a visible browser
 - Clear a user's WhatsApp session by deleting `profiles/<username>` (you'll need to scan QR again)
 
 ## Gem usage (Ruby API)
@@ -61,8 +61,12 @@ Notes:
 You can use this as a library in your own Ruby code. Build and install the gem locally:
 
 ```
+# Option A: install from RubyGems (recommended)
+gem install wabot
+
+# Option B: build locally from this repo
 gem build wabot.gemspec
-gem install ./wabot-0.1.0.gem
+gem install ./wabot-0.1.2.gem
 ```
 
 Then, in your Ruby app:
@@ -96,7 +100,11 @@ CLI when installed via gem:
 
 ```
 wabot login -u alice
-wabot send -t "+1234567890" -m "Hello from WaBot" --headless
+# Headless is the default
+wabot send -t "+1234567890" -m "Hello from WaBot"
+
+# To open a visible Chrome window
+wabot send -t "+1234567890" -m "Hello from WaBot" --headless=false
 ```
 
 Notes:

@@ -73,7 +73,7 @@ module WaBot
     desc "send", "Send a WhatsApp message"
     method_option :to, aliases: "-t", type: :string, required: true, desc: "Phone number in international format, e.g. +1234567890"
     method_option :message, aliases: "-m", type: :string, required: true, desc: "Message text"
-    method_option :headless, type: :boolean, default: false
+    method_option :headless, type: :boolean, default: true
     method_option :keep_open, type: :boolean, default: false, desc: "Keep the browser open after sending (debug)"
     def send
       session = SessionStore.new
